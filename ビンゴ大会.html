@@ -7,13 +7,12 @@
         body { 
             font-family: sans-serif; 
             padding: 20px; 
-            background: #fff8e1; /* サルワカの黄色に近い背景色 */
+            background: #fff8e1;
             display: flex; 
             gap: 40px; 
         }
-        
         #pageTitle {
-            background: #ff9800; /* サルワカのオレンジに合わせる */
+            background: #ff9800;
             color: white;
             text-align: center;
             padding: 10px;
@@ -24,14 +23,12 @@
             width: 100%;
             box-shadow: 0 3px 10px rgba(0,0,0,0.15);
         }
-        
         #tabs { 
             display: flex; 
             gap: 10px; 
             margin-bottom: 20px; 
             flex-wrap: wrap; 
         }
-        
         .tab {
             padding: 10px 18px;
             background: #fff;
@@ -43,15 +40,12 @@
             transition: all 0.2s ease;
             box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
         }
-        
         .tab.active {
-            background: #ff9800; /* サルワカのオレンジ */
+            background: #ff9800;
             color: white;
             padding-top: 12px;
             margin-top: -2px;
         }
-        
-        /* カテゴリに応じてグリッドレイアウトを変更 */
         #prizeList { 
             display: grid; 
             gap: 12px; 
@@ -61,19 +55,14 @@
             border-radius: 10px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.05);
         }
-        
-        /* A賞とB賞は3x4のグリッド（小さめ表示） */
         #prizeList.grid-small {
             grid-template-columns: repeat(3, 1fr);
             grid-template-rows: repeat(5, auto);
         }
-        
-        /* 支社長賞、部長賞、C賞は2x2のグリッド（大きめ表示） */
         #prizeList.grid-large {
             grid-template-columns: repeat(2, 1fr);
             grid-template-rows: repeat(2, auto);
         }
-        
         .item {
             background: #fff;
             border: 1px solid #ffd54f;
@@ -86,41 +75,32 @@
             position: relative;
             overflow: hidden;
         }
-        
         .item:hover {
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             border-color: #ff9800;
         }
-        
-        .item.view-only { 
-            cursor: default; 
-        }
-        
+        .item.view-only { cursor: default; }
         .item.view-only:hover { 
             background: white;
             transform: none;
             box-shadow: 0 3px 10px rgba(0,0,0,0.05);
             border-color: #ffd54f;
         }
-        
-        /* カテゴリに応じて画像サイズを変更 */
         .item img.img-small { 
             width: 85%; 
-            height: 110px; /* A賞とB賞用（小さめ） */
+            height: 110px;
             object-fit: contain; 
             border-radius: 8px; 
             margin-top: 8px;
         }
-        
         .item img.img-large { 
             width: 90%; 
-            height: 180px; /* 支社長賞、部長賞、C賞用（大きめ） */
+            height: 180px;
             object-fit: contain; 
             border-radius: 8px; 
             margin-top: 8px;
         }
-        
         #selectedPrizes { 
             flex: 1; 
             min-width: 300px;
@@ -129,22 +109,18 @@
             border-radius: 10px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.05);
         }
-        
         .selected-category-title { 
             margin-top: 10px;
             color: #ff9800;
             border-bottom: 2px solid #fff8e1;
             padding-bottom: 5px;
         }
-        
         .selected-category-container {
-            display: none; /* 初期状態では非表示 */
+            display: none;
         }
-        
         .selected-category-container.active {
-            display: block; /* アクティブなカテゴリのみ表示 */
+            display: block;
         }
-        
         .selected-item {
             background: #fff8e1;
             border-radius: 5px;
@@ -157,25 +133,21 @@
             align-items: center; 
             gap: 10px;
         }
-        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
         .selected-item input { 
             flex: 1; 
             padding: 6px;
             border: 1px solid #ffd54f;
             border-radius: 4px;
         }
-        
         .selected-item input:focus {
             border-color: #ff9800;
             outline: none;
             box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.2);
         }
-        
         .remove-btn { 
             background: #ff5252; 
             color: white; 
@@ -185,11 +157,9 @@
             padding: 6px 10px;
             transition: all 0.2s;
         }
-        
         .remove-btn:hover {
             background: #ff1744;
         }
-        
         #imageModal { 
             display: none; 
             position: fixed; 
@@ -201,7 +171,6 @@
             overflow: auto; 
             background-color: rgba(0,0,0,0.9);
         }
-        
         #modalImage { 
             margin: auto; 
             display: block; 
@@ -210,12 +179,10 @@
             object-fit: contain;
             animation: zoomIn 0.3s;
         }
-        
         @keyframes zoomIn {
             from { transform: scale(0.8); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
-        
         #modalClose { 
             position: absolute; 
             top: 15px; 
@@ -226,21 +193,18 @@
             transition: 0.3s; 
             cursor: pointer;
         }
-        
         #modalClose:hover, #modalClose:focus { 
             color: #bbb; 
             text-decoration: none; 
             cursor: pointer;
         }
-        
         #exportSection { 
             margin-top: 30px; 
             text-align: right;
         }
-        
         #exportButton { 
             padding: 8px 15px; 
-            background-color: #ff9800; /* サルワカのオレンジ */
+            background-color: #ff9800;
             color: white; 
             border: none; 
             border-radius: 5px; 
@@ -248,20 +212,16 @@
             font-size: 0.9em;
             transition: all 0.2s;
         }
-        
         #exportButton:hover { 
             background-color: #f57c00;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
-        
         .prize-title { 
             font-weight: bold; 
             margin-top: 10px;
             color: #333;
-            /* 小さいアイテムは文字も少し小さく */
             font-size: 0.95em;
         }
-        
         #showAllButton {
             padding: 6px 12px;
             background-color: #4caf50;
@@ -271,25 +231,21 @@
             cursor: pointer;
             font-size: 0.9em;
             margin-bottom: 10px;
-            display: none; /* 初期状態では非表示 */
+            display: none;
         }
-        
         #showAllButton:hover {
             background-color: #388e3c;
         }
-        
         @media (max-width: 1200px) {
             body { flex-direction: column; }
             #prizeList.grid-small { grid-template-columns: repeat(2, 1fr); }
             #prizeList.grid-large { grid-template-columns: repeat(1, 1fr); }
         }
-        
-        /* 保存状態インジケーター */
         #saveStatus {
             position: fixed;
             bottom: 10px;
             right: 10px;
-            background: rgba(255, 152, 0, 0.8); /* サルワカのオレンジ */
+            background: rgba(255, 152, 0, 0.8);
             color: white;
             padding: 5px 10px;
             border-radius: 4px;
@@ -297,7 +253,6 @@
             opacity: 0;
             transition: opacity 0.3s;
         }
-        
         #saveStatus.show {
             opacity: 1;
         }
@@ -307,7 +262,6 @@
 
 <div>
     <div id="pageTitle">冷販労組　ビンゴ大会2025</div>
-    
     <div id="tabs">
         <div class="tab active" data-category="A賞">A賞 (<span id="A賞-count">0</span>/<span id="A賞-max">5</span>)</div>
         <div class="tab" data-category="支社長賞">支社長賞 (<span id="支社長賞-count">0</span>/<span id="支社長賞-max">2</span>)</div>
@@ -320,10 +274,7 @@
 
 <div id="selectedPrizes">
     <h2>当選景品リスト</h2>
-    
-    <!-- 全リスト表示ボタン -->
     <button id="showAllButton">全カテゴリ表示</button>
-    
     <div id="selected-A賞" class="selected-category-container active">
         <h3 class="selected-category-title">A賞</h3>
     </div>
@@ -339,7 +290,6 @@
     <div id="selected-C賞" class="selected-category-container">
         <h3 class="selected-category-title">参加賞</h3>
     </div>
-    
     <div id="exportSection">
         <button id="exportButton">CSV出力</button>
     </div>
@@ -353,24 +303,24 @@
 <div id="saveStatus">データを保存しました</div>
 
 <script>
-    // 2025年5月29日現在 景品リストに基づいた商品名
+    // 2025年6月1日修正版：カンマ抜けバグを完全修正
     const prizeFilesByCategory = {
         "A賞": [
-            { filename: "A賞1.jpg", name: "リファファインバブル" },
-            { filename: "A賞2.jpg", name: "パナソニックヘアドライヤー" },
-            { filename: "A賞3.jpg", name: "ディズニーペアチケット" },
-            { filename: "A賞4.jpg", name: "Yogibo Max" },
-            { filename: "A賞5.jpg", name: "日立 コードレス スティッククリーナー" },
-            { filename: "A賞6.jpg", name: "Apple Watch SE2" },
-            { filename: "A賞7.jpg", name: "Anker Eufy ロボット掃除機" },
-            { filename: "A賞8.jpg", name: "三菱電機 ジャー炊飯器" },
-            { filename: "A賞9.jpg", name: "2Kゲーミングモニター" },
+            { filename: "A賞1.jpg",  name: "リファファインバブル" },
+            { filename: "A賞2.jpg",  name: "パナソニックヘアドライヤー" },
+            { filename: "A賞3.jpg",  name: "ディズニーペアチケット" },
+            { filename: "A賞4.jpg",  name: "Yogibo Max" },
+            { filename: "A賞5.jpg",  name: "日立 コードレス スティッククリーナー" },
+            { filename: "A賞6.jpg",  name: "Apple Watch SE2" },
+            { filename: "A賞7.jpg",  name: "Anker Eufy ロボット掃除機" },
+            { filename: "A賞8.jpg",  name: "三菱電機 ジャー炊飯器" },
+            { filename: "A賞9.jpg",  name: "2Kゲーミングモニター" },
             { filename: "A賞10.jpg", name: "三菱電機 ブレッドオーブン" },
             { filename: "A賞11.jpg", name: "リンベル ご招待券 食を讃えるひととき" },
-            { filename: "A賞12.jpg", name: "象印マホービン 加湿器 4.0L" }
- 　　       { filename: "A賞13.jpg", name: "uFit RELEASER マッサージガン" }
-            { filename: "A賞14.jpg", name: "候補募集" }
- 　　       { filename: "A賞15.jpg", name: "候補募集" }
+            { filename: "A賞12.jpg", name: "象印マホービン 加湿器 4.0L" },
+            { filename: "A賞13.jpg", name: "uFit RELEASER マッサージガン" },
+            { filename: "A賞14.jpg", name: "候補募集" },
+            { filename: "A賞15.jpg", name: "候補募集" }
         ],
         "支社長賞": [
             { filename: "支社長賞1.jpg", name: "Nintendo Switch Lite イエロー" },
@@ -381,37 +331,36 @@
             { filename: "部長賞2.jpg", name: "令和6年コシヒカリ　無洗米10kg" }
         ],
         "B賞": [
-            { filename: "B賞1.jpg", name: "シャープ プラズマクラスター空気清浄機" },
-            { filename: "B賞2.jpg", name: "JCBギフト券5000円+Amazonギフト券5000円" },
-            { filename: "B賞3.jpg", name: "BRUNO ホットプレート" },
-            { filename: "B賞4.jpg", name: "Anker Soundcore Liberty 4" },
-            { filename: "B賞5.jpg", name: "果物詰め合わせセット" },
-            { filename: "B賞6.jpg", name: "ヘッドスパマッサージャー" },
-            { filename: "B賞7.jpg", name: "電動パブラシ" },
-            { filename: "B賞8.jpg", name: "レゴ" },
-            { filename: "B賞9.jpg", name: "Yogibo Roll Midi" },
+            { filename: "B賞1.jpg",  name: "シャープ プラズマクラスター空気清浄機" },
+            { filename: "B賞2.jpg",  name: "JCBギフト券5000円+Amazonギフト券5000円" },
+            { filename: "B賞3.jpg",  name: "BRUNO ホットプレート" },
+            { filename: "B賞4.jpg",  name: "Anker Soundcore Liberty 4" },
+            { filename: "B賞5.jpg",  name: "果物詰め合わせセット" },
+            { filename: "B賞6.jpg",  name: "ヘッドスパマッサージャー" },
+            { filename: "B賞7.jpg",  name: "電動パブラシ" },
+            { filename: "B賞8.jpg",  name: "レゴ" },
+            { filename: "B賞9.jpg",  name: "Yogibo Roll Midi" },
             { filename: "B賞10.jpg", name: "UCC ドリップポッド 本体＋コーヒーカプセルセット" },
             { filename: "B賞11.jpg", name: "Anker Prime Charger" },
-            { filename: "B賞12.jpg", name: "「太鼓とバチ for Nintendo Switch」 セット" }
+            { filename: "B賞12.jpg", name: "「太鼓とバチ for Nintendo Switch」 セット" },
             { filename: "B賞13.jpg", name: "候補募集" },
             { filename: "B賞14.jpg", name: "候補募集" },
             { filename: "B賞15.jpg", name: "候補募集" }
         ],
-        "C賞": [ // 参加賞
+        "C賞": [
             { filename: "C賞1.jpg", name: "Amazonギフト券" }
         ]
     };
 
-    // 各カテゴリの最大選択数 - 要望に合わせて修正
+    // --- 以下、もともとのJSロジックはそのまま ---
+    // 各カテゴリの最大選択数
     const maxSelection = {
         "A賞": 5,
         "支社長賞": 2,
         "部長賞": 4,
         "B賞": 20,
-        "C賞": 0 // 表示のみ（選択不可）
+        "C賞": 0
     };
-
-    // 選択された景品情報
     const selectedPrizes = {
         "A賞": [],
         "支社長賞": [],
@@ -419,8 +368,6 @@
         "B賞": [],
         "C賞": []
     };
-
-    // 画面要素
     const prizeList = document.getElementById("prizeList");
     const tabs = document.querySelectorAll(".tab");
     const imageModal = document.getElementById("imageModal");
@@ -430,15 +377,10 @@
     const saveStatus = document.getElementById("saveStatus");
     const showAllButton = document.getElementById("showAllButton");
     let isShowingAllCategories = false;
-
     let currentCategory = "A賞";
-    
-    // 全カテゴリ表示ボタンの処理
     showAllButton.addEventListener('click', () => {
         const selectedContainers = document.querySelectorAll('.selected-category-container');
-        
         if (isShowingAllCategories) {
-            // 全カテゴリ表示から現在のカテゴリのみ表示に戻す
             selectedContainers.forEach(container => {
                 container.classList.remove('active');
                 if (container.id === `selected-${currentCategory}`) {
@@ -448,7 +390,6 @@
             showAllButton.textContent = '全カテゴリ表示';
             isShowingAllCategories = false;
         } else {
-            // 全カテゴリ表示に切り替え
             selectedContainers.forEach(container => {
                 container.classList.add('active');
             });
@@ -456,14 +397,11 @@
             isShowingAllCategories = true;
         }
     });
-    
-    // ローカルストレージからデータを読み込む
     function loadFromLocalStorage() {
         const saved = localStorage.getItem('bingoSelectedPrizes');
         if (saved) {
             try {
                 const data = JSON.parse(saved);
-                // 各カテゴリのデータをマージ
                 for (const category in data) {
                     if (selectedPrizes.hasOwnProperty(category)) {
                         selectedPrizes[category] = data[category];
@@ -478,14 +416,10 @@
             }
         }
     }
-    
-    // ローカルストレージにデータを保存
     function saveToLocalStorage() {
         localStorage.setItem('bingoSelectedPrizes', JSON.stringify(selectedPrizes));
         showSaveStatus('データを保存しました');
     }
-    
-    // 保存状態を表示
     function showSaveStatus(message) {
         saveStatus.textContent = message;
         saveStatus.classList.add('show');
@@ -493,8 +427,6 @@
             saveStatus.classList.remove('show');
         }, 2000);
     }
-
-    // カテゴリに応じてグリッドレイアウトを変更
     function updateGridLayout(category) {
         if (category === "A賞" || category === "B賞") {
             prizeList.classList.remove("grid-large");
@@ -504,38 +436,29 @@
             prizeList.classList.add("grid-large");
         }
     }
-    
-    // 選択済みカテゴリを切り替える
     function updateSelectedCategoryVisibility() {
         const containers = document.querySelectorAll('.selected-category-container');
         containers.forEach(container => {
             container.classList.remove('active');
         });
-        
         if (!isShowingAllCategories) {
-            // 現在のカテゴリだけ表示
             const currentContainer = document.getElementById(`selected-${currentCategory}`);
             if (currentContainer) {
                 currentContainer.classList.add('active');
             }
         } else {
-            // 全てのカテゴリを表示
             containers.forEach(container => {
                 container.classList.add('active');
             });
         }
     }
-    
-    // 全カテゴリ表示ボタンの表示/非表示を更新
     function updateShowAllButtonVisibility() {
-        // 選択されているアイテムが複数のカテゴリにある場合のみボタンを表示
         let categoriesWithItems = 0;
         for (const category in selectedPrizes) {
             if (selectedPrizes[category].length > 0) {
                 categoriesWithItems++;
             }
         }
-        
         if (categoriesWithItems > 1) {
             showAllButton.style.display = 'block';
         } else {
@@ -543,68 +466,48 @@
             isShowingAllCategories = false;
         }
     }
-
-    // 景品一覧の表示 - カテゴリに応じて画像サイズを変更
     function renderPrizes(category) {
         updateGridLayout(category);
         prizeList.innerHTML = "";
-        
-        // 画像サイズクラスを決定
         const imgClass = (category === "A賞" || category === "B賞") ? "img-small" : "img-large";
-        
         (prizeFilesByCategory[category] || []).forEach(prize => {
             const div = document.createElement("div");
             div.className = "item";
-            
-            // C賞は選択できないようにスタイル追加
             if (category === "C賞") {
                 div.classList.add("view-only");
             }
-            
             div.innerHTML = `
                 <img src="images/${prize.filename}" alt="${prize.name || '商品'}" class="${imgClass}">
                 <div class="prize-title">${prize.name || "（未設定）"}</div>
             `;
-            
-            // C賞以外は選択可能
             if (category !== "C賞") {
                 div.onclick = () => handleSelection(category, prize);
             }
-
-            // 画像クリックで拡大（全カテゴリ共通）
             const imgElement = div.querySelector('img');
             imgElement.addEventListener('click', (event) => {
                 event.stopPropagation();
                 modalImage.src = `images/${prize.filename}`;
                 imageModal.style.display = "block";
             });
-
             prizeList.appendChild(div);
         });
     }
-
-    // 景品を選択 - 重複選択可能に修正
     function handleSelection(category, prize) {
         if (selectedPrizes[category].length >= maxSelection[category]) {
             alert(`${category}は最大${maxSelection[category]}個までです！`);
             return;
         }
-        
-        // 重複チェックを削除（同じ商品を複数回選択可能に）
         selectedPrizes[category].push({...prize, winner: ""});
         renderSelectedList();
         updateTabCounts();
         updateShowAllButtonVisibility();
         saveToLocalStorage();
     }
-
-    // 選択リストの表示
     function renderSelectedList() {
         for (const category in selectedPrizes) {
             const container = document.getElementById(`selected-${category}`);
             const displayName = category === "C賞" ? "参加賞" : category;
             container.innerHTML = `<h3 class="selected-category-title">${displayName}</h3>`;
-            
             if (selectedPrizes[category].length === 0) {
                 const emptyMsg = document.createElement('p');
                 emptyMsg.textContent = `${displayName}の選択はありません`;
@@ -615,20 +518,16 @@
                 selectedPrizes[category].forEach((item, index) => {
                     const div = document.createElement("div");
                     div.className = "selected-item";
-
                     const label = document.createElement("span");
-                    label.textContent = item.name || "商品"; // 商品名があれば表示
-
+                    label.textContent = item.name || "商品";
                     const input = document.createElement("input");
                     input.type = "text";
                     input.placeholder = "当選者名を入力";
                     input.value = item.winner;
                     input.addEventListener("input", (e) => {
                         item.winner = e.target.value;
-                        // 入力値変更時に保存
                         saveToLocalStorage();
                     });
-
                     const removeBtn = document.createElement("button");
                     removeBtn.className = "remove-btn";
                     removeBtn.textContent = "×";
@@ -640,7 +539,6 @@
                         updateShowAllButtonVisibility();
                         saveToLocalStorage();
                     };
-
                     div.appendChild(label);
                     div.appendChild(input);
                     div.appendChild(removeBtn);
@@ -648,12 +546,8 @@
                 });
             }
         }
-        
-        // 現在のカテゴリのコンテナを表示
         updateSelectedCategoryVisibility();
     }
-
-    // タブの選択数表示
     function updateTabCounts() {
         for (const category in selectedPrizes) {
             const countSpan = document.getElementById(`${category}-count`);
@@ -664,8 +558,6 @@
             }
         }
     }
-
-    // モーダルウィンドウの動作
     modalClose.onclick = function() {
         imageModal.style.display = "none";
     }
@@ -674,8 +566,6 @@
             imageModal.style.display = "none";
         }
     }
-
-    // CSVエクスポート - 全カテゴリを対象に
     exportButton.addEventListener('click', () => {
         let csvContent = "カテゴリ,商品名,当選者\n";
         for (const category in selectedPrizes) {
@@ -696,16 +586,11 @@
         link.click();
         document.body.removeChild(link);
     });
-
-    // キーボードショートカット
     document.addEventListener('keydown', (e) => {
-        // Escキーでモーダルを閉じる
         if (e.key === "Escape" && imageModal.style.display === "block") {
             imageModal.style.display = "none";
         }
     });
-
-    // タブ切り替え
     tabs.forEach(tab => {
         tab.addEventListener("click", () => {
             tabs.forEach(t => t.classList.remove("active"));
@@ -715,15 +600,11 @@
             updateSelectedCategoryVisibility();
         });
     });
-
-    // 初期化処理
     loadFromLocalStorage();
     renderPrizes(currentCategory);
     renderSelectedList();
     updateTabCounts();
     updateShowAllButtonVisibility();
-    
-    // 定期的に保存（5分ごと）
     setInterval(saveToLocalStorage, 300000);
 </script>
 
