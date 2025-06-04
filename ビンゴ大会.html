@@ -2,208 +2,324 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>ビンゴ景品リスト</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ビンゴ景品リスト - Windows半画面最適化版</title>
     <style>
-        body { 
-            font-family: sans-serif; 
-            padding: 20px; 
-            background: #fff8e1;
-            display: flex; 
-            gap: 40px; 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
+        
+        body { 
+            font-family: 'Yu Gothic UI', 'Meiryo UI', sans-serif; 
+            background: #fff8e1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
         #pageTitle {
             background: #ff9800;
             color: white;
             text-align: center;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            font-size: 24px;
+            padding: 12px;
+            font-size: 18px;
             font-weight: bold;
             width: 100%;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 100;
         }
+        
+        #mainContainer {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        #leftPanel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            overflow: hidden;
+        }
+        
         #tabs { 
             display: flex; 
-            gap: 10px; 
-            margin-bottom: 20px; 
-            flex-wrap: wrap; 
+            gap: 5px; 
+            margin-bottom: 10px; 
+            flex-wrap: wrap;
         }
+        
         .tab {
-            padding: 10px 18px;
+            padding: 8px 12px;
             background: #fff;
-            border-radius: 8px 8px 0 0;
+            border-radius: 6px 6px 0 0;
             cursor: pointer;
             font-weight: bold;
             border: 1px solid #ffd54f;
             border-bottom: none;
             transition: all 0.2s ease;
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
-            min-width: 110px;
-            height: 70px;
+            box-shadow: 0 -1px 3px rgba(0,0,0,0.05);
+            font-size: 12px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex: 1;
+            min-width: 80px;
         }
+        
         .tab.active {
             background: #ff9800;
             color: white;
-            padding-top: 12px;
-            margin-top: -2px;
+            transform: translateY(-1px);
         }
+        
         .tab-content {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 2px;
         }
+        
         .remaining-count {
             font-weight: bold;
-            font-size: 0.85em;
+            font-size: 10px;
             white-space: nowrap;
         }
-        /* 常に赤 */
+        
         .status-normal,
         .status-warning,
         .status-critical {
             color: #F44336 !important;
         }
+        
         .progress-normal,
         .progress-warning,
         .progress-critical {
             background-color: #F44336 !important;
         }
+        
         .progress-container {
-            width: 90%;
-            height: 4px;
+            width: 80%;
+            height: 3px;
             background-color: #e0e0e0;
             border-radius: 2px;
             overflow: hidden;
-            margin-top: 2px;
+            margin-top: 1px;
         }
+        
         .progress-bar {
             height: 100%;
             transition: width 0.3s, background-color 0.3s;
         }
+        
         #prizeList { 
-            display: grid; 
-            gap: 12px; 
-            width: 720px;
-            background: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-        }
-        #prizeList.grid-small {
+            display: grid;
             grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            flex: 1;
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            overflow-y: auto;
         }
+        
         #prizeList.grid-vertical {
             grid-template-columns: 1fr;
         }
+        
         .item {
             background: #fff;
             border: 1px solid #ffd54f;
-            padding: 15px;
-            border-radius: 10px;
+            padding: 8px;
+            border-radius: 8px;
             text-align: center;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             transition: 0.2s;
             cursor: pointer;
             position: relative;
             overflow: hidden;
         }
+        
         .item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             border-color: #ff9800;
         }
+        
         .item.view-only { 
             cursor: default; 
         }
+        
         .item.view-only:hover { 
             background: white;
             transform: none;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             border-color: #ffd54f;
         }
-        .item img.img-small { 
-            width: 85%; 
-            height: 110px;
-            object-fit: contain; 
-            border-radius: 8px; 
-            margin-top: 8px;
-        }
-        .item img.img-large { 
+        
+        .item img { 
             width: 100%; 
-            height: 260px;
+            height: 80px;
             object-fit: contain; 
-            border-radius: 8px; 
-            margin-top: 0;
-            display: block;
+            border-radius: 6px; 
+            margin-bottom: 5px;
         }
-        #selectedPrizes { 
-            flex: 1; 
-            min-width: 300px;
+        
+        .item img.img-large { 
+            height: 240px;
+        }
+        
+        .prize-title { 
+            font-weight: bold; 
+            color: #333;
+            font-size: 11px;
+            line-height: 1.2;
+        }
+        
+        #rightPanel {
+            width: 300px;
             background: #fff;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            border-left: 2px solid #ffd54f;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
-        .selected-category-title { 
-            margin-top: 10px;
+        
+        #selectedPrizes { 
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        
+        #selectedPrizes h2 {
             color: #ff9800;
+            margin-bottom: 10px;
+            font-size: 16px;
+            text-align: center;
             border-bottom: 2px solid #fff8e1;
             padding-bottom: 5px;
         }
+        
+        .selected-category-title { 
+            margin-top: 8px;
+            color: #ff9800;
+            border-bottom: 1px solid #fff8e1;
+            padding-bottom: 3px;
+            font-size: 14px;
+        }
+        
         .selected-category-container {
             display: none;
         }
+        
         .selected-category-container.active {
             display: block;
         }
+        
         .selected-item {
             background: #fff8e1;
-            border-radius: 5px;
-            padding: 8px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-radius: 4px;
+            padding: 6px;
+            margin-bottom: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
             transition: all 0.3s;
             animation: fadeIn 0.5s;
-            display: flex; 
-            align-items: center; 
-            gap: 10px;
+            font-size: 12px;
         }
+        
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        .selected-item-name {
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: #333;
+        }
+        
+        .selected-item-input {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        
         .selected-item input { 
             flex: 1; 
-            padding: 6px;
+            padding: 4px;
             border: 1px solid #ffd54f;
-            border-radius: 4px;
+            border-radius: 3px;
+            font-size: 11px;
         }
+        
         .selected-item input:focus {
             border-color: #ff9800;
             outline: none;
             box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.2);
         }
+        
         .remove-btn { 
             background: #ff5252; 
             color: white; 
             border: none; 
-            border-radius: 5px; 
+            border-radius: 3px; 
             cursor: pointer; 
-            padding: 6px 10px;
+            padding: 4px 6px;
+            font-size: 10px;
             transition: all 0.2s;
         }
+        
         .remove-btn:hover {
             background: #ff1744;
         }
+        
+        #showAllButton {
+            padding: 5px 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            margin-bottom: 8px;
+            display: none;
+        }
+        
+        #showAllButton:hover {
+            background-color: #388e3c;
+        }
+        
+        #exportSection { 
+            padding: 10px;
+            text-align: center;
+            border-top: 1px solid #ffd54f;
+        }
+        
+        #exportButton { 
+            padding: 6px 12px; 
+            background-color: #ff9800;
+            color: white; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        #exportButton:hover { 
+            background-color: #f57c00;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+        
         #imageModal { 
             display: none; 
             position: fixed; 
-            z-index: 1; 
+            z-index: 1000; 
             left: 0; 
             top: 0; 
             width: 100%; 
@@ -211,6 +327,7 @@
             overflow: auto; 
             background-color: rgba(0,0,0,0.9);
         }
+        
         #modalImage { 
             margin: auto; 
             display: block; 
@@ -219,10 +336,12 @@
             object-fit: contain;
             animation: zoomIn 0.3s;
         }
+        
         @keyframes zoomIn {
             from { transform: scale(0.8); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
         }
+        
         #modalClose { 
             position: absolute; 
             top: 15px; 
@@ -233,54 +352,13 @@
             transition: 0.3s; 
             cursor: pointer;
         }
+        
         #modalClose:hover, #modalClose:focus { 
             color: #bbb; 
             text-decoration: none; 
             cursor: pointer;
         }
-        #exportSection { 
-            margin-top: 30px; 
-            text-align: right;
-        }
-        #exportButton { 
-            padding: 8px 15px; 
-            background-color: #ff9800;
-            color: white; 
-            border: none; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            font-size: 0.9em;
-            transition: all 0.2s;
-        }
-        #exportButton:hover { 
-            background-color: #f57c00;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-        .prize-title { 
-            font-weight: bold; 
-            margin-top: 10px;
-            color: #333;
-            font-size: 0.95em;
-        }
-        #showAllButton {
-            padding: 6px 12px;
-            background-color: #4caf50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-            display: none;
-        }
-        #showAllButton:hover {
-            background-color: #388e3c;
-        }
-        @media (max-width: 1200px) {
-            body { flex-direction: column; }
-            #prizeList.grid-small { grid-template-columns: repeat(2, 1fr); }
-            #prizeList.grid-vertical { grid-template-columns: 1fr; }
-        }
+        
         #saveStatus {
             position: fixed;
             bottom: 10px;
@@ -289,15 +367,15 @@
             color: white;
             padding: 5px 10px;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 11px;
             opacity: 0;
             transition: opacity 0.3s;
         }
+        
         #saveStatus.show {
             opacity: 1;
         }
-
-        /* --- 当選演出 --- */
+        
         #congratsEffect {
             position: fixed;
             z-index: 9999;
@@ -308,50 +386,50 @@
             align-items: center;
             animation: fadeInBg 0.3s;
         }
-#congratsInner {
-    background: #fff;
-    border-radius: 40px;
-    padding: 60px 90px;
-    box-shadow: 0 0 100px #ff9800, 0 0 300px #ff9800;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    animation: popUp 0.8s;
-}
-#congratsText {
-    font-size: 4.2em;
-    color: #ff9800;
-    font-weight: bold;
-    margin-bottom: 40px;
-    text-shadow: 2px 2px 18px #fff8e1, 0 0 28px #ff9800;
-    animation: tada 1.2s;
-    letter-spacing: 0.06em;
-}
-#congratsImg {
-    width: 380px;
-    height: 380px;
-    object-fit: contain;
-    border-radius: 30px;
-    box-shadow: 0 0 50px #ffd54f;
-    background: #fff8e1;
-    margin-bottom: 10px;
-}
-@media (max-width: 600px) {
-    #congratsInner { padding: 15vw 0vw; }
-    #congratsText { font-size: 2.2em; }
-    #congratsImg { width: 60vw; height: 60vw; }
-}
-
+        
+        #congratsInner {
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px 40px;
+            box-shadow: 0 0 50px #ff9800, 0 0 150px #ff9800;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: popUp 0.8s;
+        }
+        
+        #congratsText {
+            font-size: 2.5em;
+            color: #ff9800;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 10px #fff8e1, 0 0 15px #ff9800;
+            animation: tada 1.2s;
+            letter-spacing: 0.06em;
+        }
+        
+        #congratsImg {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+            border-radius: 15px;
+            box-shadow: 0 0 25px #ffd54f;
+            background: #fff8e1;
+            margin-bottom: 10px;
+        }
+        
         @keyframes fadeInBg {
             from { opacity: 0; }
             to   { opacity: 1; }
         }
+        
         @keyframes popUp {
             0% { transform: scale(0.3) rotate(-20deg); opacity: 0;}
             60% { transform: scale(1.1) rotate(6deg);}
             80% { transform: scale(0.95) rotate(-2deg);}
             100%{ transform: scale(1) rotate(0); opacity: 1;}
         }
+        
         @keyframes tada {
             0% { transform: scale(0.7) rotate(-10deg);}
             10% { transform: scale(1.1) rotate(10deg);}
@@ -364,38 +442,43 @@
 </head>
 <body>
 
-<div>
-    <div id="pageTitle">冷販労組　関東支部　大ビンゴ大会2025</div>
-    <div id="tabs">
-        <div class="tab active" data-category="A賞"></div>
-        <div class="tab" data-category="支社長賞"></div>
-        <div class="tab" data-category="部長賞"></div>
-        <div class="tab" data-category="B賞"></div>
-        <div class="tab" data-category="C賞"></div>
-    </div>
-    <div id="prizeList" class="grid-small"></div>
-</div>
+<div id="pageTitle">冷販労組　関東支部　大ビンゴ大会2025</div>
 
-<div id="selectedPrizes">
-    <h2>当選景品リスト</h2>
-    <button id="showAllButton">全カテゴリ表示</button>
-    <div id="selected-A賞" class="selected-category-container active">
-        <h3 class="selected-category-title">A賞</h3>
+<div id="mainContainer">
+    <div id="leftPanel">
+        <div id="tabs">
+            <div class="tab active" data-category="A賞"></div>
+            <div class="tab" data-category="支社長賞"></div>
+            <div class="tab" data-category="部長賞"></div>
+            <div class="tab" data-category="B賞"></div>
+            <div class="tab" data-category="C賞"></div>
+        </div>
+        <div id="prizeList"></div>
     </div>
-    <div id="selected-支社長賞" class="selected-category-container">
-        <h3 class="selected-category-title">支社長賞</h3>
-    </div>
-    <div id="selected-部長賞" class="selected-category-container">
-        <h3 class="selected-category-title">部長賞</h3>
-    </div>
-    <div id="selected-B賞" class="selected-category-container">
-        <h3 class="selected-category-title">B賞</h3>
-    </div>
-    <div id="selected-C賞" class="selected-category-container">
-        <h3 class="selected-category-title">参加賞</h3>
-    </div>
-    <div id="exportSection">
-        <button id="exportButton">CSV出力</button>
+
+    <div id="rightPanel">
+        <div id="selectedPrizes">
+            <h2>当選景品リスト</h2>
+            <button id="showAllButton">全カテゴリ表示</button>
+            <div id="selected-A賞" class="selected-category-container active">
+                <h3 class="selected-category-title">A賞</h3>
+            </div>
+            <div id="selected-支社長賞" class="selected-category-container">
+                <h3 class="selected-category-title">支社長賞</h3>
+            </div>
+            <div id="selected-部長賞" class="selected-category-container">
+                <h3 class="selected-category-title">部長賞</h3>
+            </div>
+            <div id="selected-B賞" class="selected-category-container">
+                <h3 class="selected-category-title">B賞</h3>
+            </div>
+            <div id="selected-C賞" class="selected-category-container">
+                <h3 class="selected-category-title">参加賞</h3>
+            </div>
+        </div>
+        <div id="exportSection">
+            <button id="exportButton">CSV出力</button>
+        </div>
     </div>
 </div>
 
@@ -405,7 +488,6 @@
 </div>
 <div id="saveStatus">データを保存しました</div>
 
-<!-- 当選演出 -->
 <div id="congratsEffect">
     <div id="congratsInner">
         <span id="congratsText">GET！</span>
@@ -415,7 +497,6 @@
 <audio id="congratsSound" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12c6e2c593.mp3"></audio>
 
 <script>
-    // ---（省略：prizeFilesByCategory, maxSelection, selectedPrizesなどはそのまま）---
     const prizeFilesByCategory = {
         "A賞": [
             { filename: "A賞1.jpg",  name: "リファファインバブル" },
@@ -471,6 +552,7 @@
         "B賞": 20,
         "C賞": 0
     };
+    
     const selectedPrizes = {
         "A賞": [],
         "支社長賞": [],
@@ -490,7 +572,6 @@
     let isShowingAllCategories = false;
     let currentCategory = "A賞";
 
-    // 当選演出
     function showCongrats(prize) {
         const effect = document.getElementById('congratsEffect');
         const img = document.getElementById('congratsImg');
@@ -499,12 +580,10 @@
         text.textContent = "GET！";
         effect.style.display = 'flex';
 
-        // 効果音
         const sound = document.getElementById('congratsSound');
         sound.currentTime = 0;
-        sound.play();
+        sound.play().catch(() => {});
 
-        // 一定時間で自動消去
         setTimeout(() => { effect.style.display = 'none'; }, 2200);
     }
 
@@ -561,12 +640,9 @@
         }, 2000);
     }
 
-    // グリッドレイアウト上下表示対応
     function updateGridLayout(category) {
-        prizeList.classList.remove("grid-small", "grid-large", "grid-vertical");
-        if (category === "A賞" || category === "B賞") {
-            prizeList.classList.add("grid-small");
-        } else {
+        prizeList.classList.remove("grid-vertical");
+        if (category === "支社長賞" || category === "部長賞" || category === "C賞") {
             prizeList.classList.add("grid-vertical");
         }
     }
@@ -606,7 +682,7 @@
     function renderPrizes(category) {
         updateGridLayout(category);
         prizeList.innerHTML = "";
-        const imgClass = (category === "A賞" || category === "B賞") ? "img-small" : "img-large";
+        const imgClass = (category === "支社長賞" || category === "部長賞" || category === "C賞") ? "img-large" : "";
         (prizeFilesByCategory[category] || []).forEach(prize => {
             const div = document.createElement("div");
             div.className = "item";
@@ -630,7 +706,6 @@
         });
     }
 
-    // 景品選択時の演出つき
     function handleSelection(category, prize) {
         showCongrats(prize);
         if (selectedPrizes[category].length >= maxSelection[category]) {
@@ -654,21 +729,29 @@
                 emptyMsg.textContent = `${displayName}の選択はありません`;
                 emptyMsg.style.color = '#999';
                 emptyMsg.style.fontStyle = 'italic';
+                emptyMsg.style.fontSize = '11px';
                 container.appendChild(emptyMsg);
             } else {
                 selectedPrizes[category].forEach((item, index) => {
                     const div = document.createElement("div");
                     div.className = "selected-item";
-                    const label = document.createElement("span");
-                    label.textContent = item.name || "商品";
+                    
+                    const nameDiv = document.createElement("div");
+                    nameDiv.className = "selected-item-name";
+                    nameDiv.textContent = item.name || "商品";
+                    
+                    const inputDiv = document.createElement("div");
+                    inputDiv.className = "selected-item-input";
+                    
                     const input = document.createElement("input");
                     input.type = "text";
-                    input.placeholder = "当選者名を入力";
+                    input.placeholder = "当選者名";
                     input.value = item.winner;
                     input.addEventListener("input", (e) => {
                         item.winner = e.target.value;
                         saveToLocalStorage();
                     });
+                    
                     const removeBtn = document.createElement("button");
                     removeBtn.className = "remove-btn";
                     removeBtn.textContent = "×";
@@ -680,9 +763,11 @@
                         updateShowAllButtonVisibility();
                         saveToLocalStorage();
                     };
-                    div.appendChild(label);
-                    div.appendChild(input);
-                    div.appendChild(removeBtn);
+                    
+                    inputDiv.appendChild(input);
+                    inputDiv.appendChild(removeBtn);
+                    div.appendChild(nameDiv);
+                    div.appendChild(inputDiv);
                     container.appendChild(div);
                 });
             }
