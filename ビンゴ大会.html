@@ -296,6 +296,62 @@
         #saveStatus.show {
             opacity: 1;
         }
+
+        /* --- 当選演出 --- */
+        #congratsEffect {
+            position: fixed;
+            z-index: 9999;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            animation: fadeInBg 0.3s;
+        }
+        #congratsInner {
+            background: #fff;
+            border-radius: 30px;
+            padding: 40px 60px;
+            box-shadow: 0 0 60px #ff9800, 0 0 200px #ff9800;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: popUp 0.8s;
+        }
+        #congratsText {
+            font-size: 3em;
+            color: #ff9800;
+            font-weight: bold;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 12px #fff8e1, 0 0 20px #ff9800;
+            animation: tada 1.2s;
+        }
+        #congratsImg {
+            width: 260px;
+            height: 260px;
+            object-fit: contain;
+            border-radius: 20px;
+            box-shadow: 0 0 30px #ffd54f;
+            background: #fff8e1;
+        }
+        @keyframes fadeInBg {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        @keyframes popUp {
+            0% { transform: scale(0.3) rotate(-20deg); opacity: 0;}
+            60% { transform: scale(1.1) rotate(6deg);}
+            80% { transform: scale(0.95) rotate(-2deg);}
+            100%{ transform: scale(1) rotate(0); opacity: 1;}
+        }
+        @keyframes tada {
+            0% { transform: scale(0.7) rotate(-10deg);}
+            10% { transform: scale(1.1) rotate(10deg);}
+            20% { transform: scale(0.95) rotate(-10deg);}
+            30% { transform: scale(1.05) rotate(6deg);}
+            40% { transform: scale(1) rotate(0);}
+            100% { }
+        }
     </style>
 </head>
 <body>
@@ -340,6 +396,15 @@
     <img id="modalImage" src="" alt="景品画像">
 </div>
 <div id="saveStatus">データを保存しました</div>
+
+<!-- 当選演出 -->
+<div id="congratsEffect">
+    <div id="congratsInner">
+        <span id="congratsText">GET！</span>
+        <img id="congratsImg" src="" alt="当選景品">
+    </div>
+</div>
+<audio id="congratsSound" src="https://cdn.pixabay.com/audio/2022/10/16/audio_12c6e2c593.mp3"></audio>
 
 <script>
     // ---（省略：prizeFilesByCategory, maxSelection, selectedPrizesなどはそのまま）---
@@ -416,6 +481,24 @@
     const showAllButton = document.getElementById("showAllButton");
     let isShowingAllCategories = false;
     let currentCategory = "A賞";
+
+    // 当選演出
+    function showCongrats(prize) {
+        const effect = document.getElementById('congratsEffect');
+        const img = document.getElementById('congratsImg');
+        const text = document.getElementById('congratsText');
+        img.src = `images/${prize.filename}`;
+        text.textContent = "GET！";
+        effect.style.display = 'flex';
+
+        // 効果音
+        const sound = document.getElementById('congratsSound');
+        sound.currentTime = 0;
+        sound.play();
+
+        // 一定時間で自動消去
+        setTimeout(() => { effect.style.display = 'none'; }, 2200);
+    }
 
     showAllButton.addEventListener('click', () => {
         const selectedContainers = document.querySelectorAll('.selected-category-container');
@@ -539,7 +622,9 @@
         });
     }
 
+    // 景品選択時の演出つき
     function handleSelection(category, prize) {
+        showCongrats(prize);
         if (selectedPrizes[category].length >= maxSelection[category]) {
             alert(`${category}は最大${maxSelection[category]}個までです！`);
             return;
