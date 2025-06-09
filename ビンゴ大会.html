@@ -164,14 +164,18 @@
         
         .item img { 
             width: 100%; 
-            height: 80px;
+            height: 80px; /* 通常の画像高さ */
             object-fit: contain; 
             border-radius: 6px; 
             margin-bottom: 5px;
         }
         
+        .item img.img-medium { /* 中くらいの画像の高さ */
+            height: 160px; 
+        }
+
         .item img.img-large { 
-            height: 240px;
+            height: 240px; /* 大きい画像の高さ */
         }
         
         .prize-title { 
@@ -296,10 +300,31 @@
         
         #exportSection { 
             padding: 10px;
-            text-align: center;
             border-top: 1px solid #ffd54f;
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 10px; 
         }
         
+        #showParticipationPrizeButton { 
+            padding: 6px 12px; 
+            background-color: #607d8b; 
+            color: white; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 12px;
+            transition: background-color 0.2s ease;
+        }
+        #showParticipationPrizeButton:hover {
+            background-color: #546e7a;
+        }
+        #showParticipationPrizeButton.active { 
+            background-color: #ff9800; 
+            color: white;
+        }
+
         #exportButton { 
             padding: 6px 12px; 
             background-color: #ff9800;
@@ -451,7 +476,7 @@
             <div class="tab" data-category="支社長賞"></div>
             <div class="tab" data-category="部長賞"></div>
             <div class="tab" data-category="B賞"></div>
-            <div class="tab" data-category="C賞"></div>
+            <div class="tab" data-category="ファミリー賞"></div>
         </div>
         <div id="prizeList"></div>
     </div>
@@ -472,11 +497,15 @@
             <div id="selected-B賞" class="selected-category-container">
                 <h3 class="selected-category-title">B賞</h3>
             </div>
+            <div id="selected-ファミリー賞" class="selected-category-container">
+                <h3 class="selected-category-title">ファミリー賞</h3>
+            </div>
             <div id="selected-C賞" class="selected-category-container">
                 <h3 class="selected-category-title">参加賞</h3>
             </div>
         </div>
         <div id="exportSection">
+            <button id="showParticipationPrizeButton">参加賞</button>
             <button id="exportButton">CSV出力</button>
         </div>
     </div>
@@ -540,8 +569,13 @@
             { filename: "B賞14.jpg", name: "⑭EENOUR ゴルフレーザー距離計" },
             { filename: "B賞15.jpg", name: "⑮天空のスイーツ プリン" }
         ],
-        "C賞": [
-            { filename: "C賞1.jpg", name: "Amazonギフト券" }
+        "ファミリー賞": [
+            { filename: "family_prize_1.jpg", name: "【ファミリー賞1等】Amazonギフト券 5000円" },
+            { filename: "family_prize_2.jpg", name: "【ファミリー賞2等】Amazonギフト券 4000円" },
+            { filename: "family_prize_3.jpg", name: "【ファミリー賞3等】Amazonギフト券 3000円" }
+        ],
+        "C賞": [ 
+            { filename: "C賞1.jpg", name: "Amazonギフト券 3000円分" }
         ]
     };
 
@@ -550,7 +584,8 @@
         "支社長賞": 2,
         "部長賞": 4,
         "B賞": 20,
-        "C賞": 0
+        "ファミリー賞": 3, 
+        "C賞": 0 
     };
     
     const selectedPrizes = {
@@ -558,7 +593,8 @@
         "支社長賞": [],
         "部長賞": [],
         "B賞": [],
-        "C賞": []
+        "ファミリー賞": [], 
+        "C賞": [] 
     };
 
     const prizeList = document.getElementById("prizeList");
@@ -569,8 +605,10 @@
     const exportButton = document.getElementById("exportButton");
     const saveStatus = document.getElementById("saveStatus");
     const showAllButton = document.getElementById("showAllButton");
+    const showParticipationPrizeButton = document.getElementById("showParticipationPrizeButton"); 
     let isShowingAllCategories = false;
     let currentCategory = "A賞";
+    let showingParticipationPrizes = false; 
 
     function showCongrats(prize) {
         const effect = document.getElementById('congratsEffect');
@@ -592,8 +630,10 @@
         if (isShowingAllCategories) {
             selectedContainers.forEach(container => {
                 container.classList.remove('active');
-                if (container.id === `selected-${currentCategory}`) {
+                if (container.id === `selected-${currentCategory}`) { 
                     container.classList.add('active');
+                } else if (currentCategory === "C賞" && container.id === 'selected-C賞') { 
+                     container.classList.add('active');
                 }
             });
             showAllButton.textContent = '全カテゴリ表示';
@@ -605,6 +645,7 @@
             showAllButton.textContent = '現在のカテゴリのみ表示';
             isShowingAllCategories = true;
         }
+        updateSelectedCategoryVisibility(); 
     });
 
     function loadFromLocalStorage() {
@@ -642,8 +683,11 @@
 
     function updateGridLayout(category) {
         prizeList.classList.remove("grid-vertical");
-        if (category === "支社長賞" || category === "部長賞" || category === "C賞") {
-            prizeList.classList.add("grid-vertical");
+        // 支社長賞、部長賞、C賞（参加賞）、ファミリー賞で景品数が少ない場合に縦1列表示
+        if (category === "支社長賞" || category === "部長賞" || category === "C賞" || category === "ファミリー賞") {
+             if (prizeFilesByCategory[category] && prizeFilesByCategory[category].length <= 3) { 
+                prizeList.classList.add("grid-vertical");
+             }
         }
     }
 
@@ -653,16 +697,18 @@
             container.classList.remove('active');
         });
         if (!isShowingAllCategories) {
-            const currentContainer = document.getElementById(`selected-${currentCategory}`);
+            const targetId = showingParticipationPrizes ? `selected-C賞` : `selected-${currentCategory}`;
+            const currentContainer = document.getElementById(targetId);
             if (currentContainer) {
                 currentContainer.classList.add('active');
             }
-        } else {
+        } else { 
             containers.forEach(container => {
                 container.classList.add('active');
             });
         }
     }
+
 
     function updateShowAllButtonVisibility() {
         let categoriesWithItems = 0;
@@ -675,26 +721,36 @@
             showAllButton.style.display = 'block';
         } else {
             showAllButton.style.display = 'none';
-            isShowingAllCategories = false;
+            isShowingAllCategories = false; 
         }
     }
 
-    function renderPrizes(category) {
-        updateGridLayout(category);
+    function renderPrizes(categoryToRender) {
+        updateGridLayout(categoryToRender); 
         prizeList.innerHTML = "";
-        const imgClass = (category === "支社長賞" || category === "部長賞" || category === "C賞") ? "img-large" : "";
-        (prizeFilesByCategory[category] || []).forEach(prize => {
+        
+        let imgClass = ""; 
+        
+        if (categoryToRender === "ファミリー賞") {
+            imgClass = "img-medium"; 
+        } else if (categoryToRender === "支社長賞" || categoryToRender === "部長賞" || categoryToRender === "C賞") {
+            if (prizeFilesByCategory[categoryToRender] && prizeFilesByCategory[categoryToRender].length <= 3) {
+                imgClass = "img-large";
+            }
+        }
+
+        (prizeFilesByCategory[categoryToRender] || []).forEach(prize => {
             const div = document.createElement("div");
             div.className = "item";
-            if (category === "C賞") {
+            if (categoryToRender === "C賞") {
                 div.classList.add("view-only");
             }
             div.innerHTML = `
                 <img src="images/${prize.filename}" alt="${prize.name || '商品'}" class="${imgClass}">
                 <div class="prize-title">${prize.name || "（未設定）"}</div>
             `;
-            if (category !== "C賞") {
-                div.onclick = () => handleSelection(category, prize);
+            if (categoryToRender !== "C賞") {
+                div.onclick = () => handleSelection(categoryToRender, prize);
             }
             const imgElement = div.querySelector('img');
             imgElement.addEventListener('click', (event) => {
@@ -707,6 +763,8 @@
     }
 
     function handleSelection(category, prize) {
+        if (category === "C賞") return;
+
         showCongrats(prize);
         if (selectedPrizes[category].length >= maxSelection[category]) {
             alert(`${category}は最大${maxSelection[category]}個までです！`);
@@ -720,11 +778,20 @@
     }
 
     function renderSelectedList() {
-        for (const category in selectedPrizes) {
-            const container = document.getElementById(`selected-${category}`);
-            const displayName = category === "C賞" ? "参加賞" : category;
+        for (const categoryKey in selectedPrizes) { 
+            const container = document.getElementById(`selected-${categoryKey}`);
+            if (!container) { 
+                console.warn(`Selected prize container for ${categoryKey} not found.`);
+                continue;
+            }
+
+            let displayName = categoryKey;
+            if (categoryKey === "C賞") displayName = "参加賞";
+            else if (categoryKey === "ファミリー賞") displayName = "ファミリー賞";
+
             container.innerHTML = `<h3 class="selected-category-title">${displayName}</h3>`;
-            if (selectedPrizes[category].length === 0) {
+
+            if (selectedPrizes[categoryKey].length === 0) {
                 const emptyMsg = document.createElement('p');
                 emptyMsg.textContent = `${displayName}の選択はありません`;
                 emptyMsg.style.color = '#999';
@@ -732,7 +799,7 @@
                 emptyMsg.style.fontSize = '11px';
                 container.appendChild(emptyMsg);
             } else {
-                selectedPrizes[category].forEach((item, index) => {
+                selectedPrizes[categoryKey].forEach((item, index) => {
                     const div = document.createElement("div");
                     div.className = "selected-item";
                     
@@ -749,7 +816,7 @@
                     input.value = item.winner;
                     input.addEventListener("input", (e) => {
                         item.winner = e.target.value;
-                        saveToLocalStorage();
+                        saveToLocalStorage(); 
                     });
                     
                     const removeBtn = document.createElement("button");
@@ -757,11 +824,11 @@
                     removeBtn.textContent = "×";
                     removeBtn.onclick = (e) => {
                         e.stopPropagation();
-                        selectedPrizes[category].splice(index, 1);
-                        renderSelectedList();
-                        updateTabCounts();
-                        updateShowAllButtonVisibility();
-                        saveToLocalStorage();
+                        selectedPrizes[categoryKey].splice(index, 1);
+                        renderSelectedList(); 
+                        updateTabCounts(); 
+                        updateShowAllButtonVisibility(); 
+                        saveToLocalStorage(); 
                     };
                     
                     inputDiv.appendChild(input);
@@ -772,50 +839,56 @@
                 });
             }
         }
-        updateSelectedCategoryVisibility();
+        updateSelectedCategoryVisibility(); 
     }
 
     function updateTabCounts() {
         tabs.forEach(tab => {
             const category = tab.dataset.category;
-            const selected = selectedPrizes[category].length;
+            const selected = selectedPrizes[category] ? selectedPrizes[category].length : 0;
             const max = maxSelection[category];
-            const remaining = max - selected;
-            tab.innerHTML = '';
+            
+            tab.innerHTML = ''; 
             const contentDiv = document.createElement('div');
             contentDiv.className = 'tab-content';
+            
             const categoryName = document.createElement('div');
-            categoryName.textContent = category === "C賞" ? "参加賞" : category;
+            categoryName.textContent = category; 
             contentDiv.appendChild(categoryName);
-            if (category !== "C賞" && max > 0) {
+
+            if (maxSelection.hasOwnProperty(category) && max > 0) {
+                const remaining = max - selected;
                 let statusClass = '';
                 let progressClass = '';
                 const remainingRatio = remaining / max;
+
                 if (remainingRatio <= 0.2) {
                     statusClass = 'status-critical';
                     progressClass = 'progress-critical';
                 } else if (remainingRatio <= 0.5) {
                     statusClass = 'status-warning';
                     progressClass = 'progress-warning';
-                } else {
-                    statusClass = 'status-normal';
+                } else { 
+                    statusClass = 'status-normal'; 
                     progressClass = 'progress-normal';
                 }
+                
                 const statusDiv = document.createElement('div');
                 statusDiv.className = `remaining-count ${statusClass}`;
                 statusDiv.textContent = `残り: ${remaining} (${selected}/${max})`;
                 contentDiv.appendChild(statusDiv);
+                
                 const progressContainer = document.createElement('div');
                 progressContainer.className = 'progress-container';
                 const progressBar = document.createElement('div');
                 progressBar.className = `progress-bar ${progressClass}`;
-                progressBar.style.width = `${selected / max * 100}%`;
+                progressBar.style.width = `${(selected / max) * 100}%`;
                 progressContainer.appendChild(progressBar);
                 contentDiv.appendChild(progressContainer);
             }
             tab.appendChild(contentDiv);
         });
-        updateShowAllButtonVisibility();
+        updateShowAllButtonVisibility(); 
     }
 
     modalClose.onclick = function() {
@@ -829,25 +902,25 @@
 
     exportButton.addEventListener('click', () => {
         let csvContent = "カテゴリ,商品名,当選者\n";
-        for (const category in selectedPrizes) {
-            if (selectedPrizes[category].length > 0) {
-                const displayCategory = category === "C賞" ? "参加賞" : category;
-                selectedPrizes[category].forEach(item => {
+        for (const categoryKey in selectedPrizes) {
+            if (selectedPrizes[categoryKey].length > 0) {
+                const displayCategory = categoryKey === "C賞" ? "参加賞" : categoryKey; 
+                selectedPrizes[categoryKey].forEach(item => {
                     const escapedName = item.name ? `"${item.name.replace(/"/g, '""')}"` : "";
                     const escapedWinner = item.winner ? `"${item.winner.replace(/"/g, '""')}"` : "";
                     csvContent += `${displayCategory},${escapedName},${escapedWinner}\n`;
                 });
             }
         }
-        const bom = "\uFEFF";
+        const bom = "\uFEFF"; 
         const encodedUri = encodeURI("data:text/csv;charset=utf-8," + bom + csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "bingo_prizes.csv");
+        link.setAttribute("download", "bingo_prizes_list.csv"); 
         document.body.appendChild(link);
-        link.style.display = 'none';
+        link.style.display = 'none'; 
         link.click();
-        document.body.removeChild(link);
+        document.body.removeChild(link); 
     });
 
     document.addEventListener('keydown', (e) => {
@@ -861,17 +934,35 @@
             tabs.forEach(t => t.classList.remove("active"));
             tab.classList.add("active");
             currentCategory = tab.dataset.category;
+            showingParticipationPrizes = false; 
+            showParticipationPrizeButton.classList.remove('active'); 
             renderPrizes(currentCategory);
             updateSelectedCategoryVisibility();
         });
     });
 
+    showParticipationPrizeButton.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove("active")); 
+        showParticipationPrizeButton.classList.add('active'); 
+        currentCategory = "C賞"; 
+        showingParticipationPrizes = true; 
+        renderPrizes("C賞"); 
+        updateSelectedCategoryVisibility(); 
+    });
+
     loadFromLocalStorage();
-    renderPrizes(currentCategory);
-    renderSelectedList();
-    updateTabCounts();
-    updateShowAllButtonVisibility();
-    setInterval(saveToLocalStorage, 300000);
+    const initialTab = document.querySelector(`.tab[data-category="${currentCategory}"]`);
+    if (initialTab) { 
+        tabs.forEach(t => t.classList.remove("active"));
+        initialTab.classList.add("active");
+    }
+    renderPrizes(currentCategory); 
+    renderSelectedList(); 
+    updateTabCounts(); 
+    updateShowAllButtonVisibility(); 
+    updateSelectedCategoryVisibility(); 
+
+    setInterval(saveToLocalStorage, 300000); 
 </script>
 </body>
 </html>
